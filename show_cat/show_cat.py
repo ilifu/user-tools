@@ -27,13 +27,15 @@ def display_image(path: str):
     image_width, image_height = image.size
 
     if image_width > screen_width or image_height > screen_height:
-        height_ratio = image_height / screen_height
-        width_ratio = image_width / screen_width
+        logger.debug(f'Image is larger than 90% of screen ({image_width}×{image_height} vs {screen_width}×{screen_height})')
+        height_ratio, width_ratio = image_height / screen_height, image_width / screen_width
         if height_ratio > width_ratio:
             resize_ratio = height_ratio
         else:
             resize_ratio = width_ratio
-        image = image.resize((int(image_width/resize_ratio), int(image_height/resize_ratio)), Image.ANTIALIAS)
+        new_size = (int(image_width/resize_ratio), int(image_height/resize_ratio))
+        logger.debug(f'Resizing image to: {new_size[0]}×{new_size[1]}')
+        image = image.resize(new_size, Image.ANTIALIAS)
 
     final_image = ImageTk.PhotoImage(image)
     panel = Label(image_window, image=final_image)
